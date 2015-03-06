@@ -25,5 +25,12 @@ sub getProtocol {
   return $self->{_protocol};
 }
 
+sub doHandshake {
+  my ($self, $client, $socket) = @_;
+  while(my $line = <$socket>) {
+    print $line;
+  }
+}
+
 1;
 __END__

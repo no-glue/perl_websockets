@@ -3,8 +3,10 @@ use Socket;
 use Server;
 use Array;
 
+$array = new Array();
+# array
 $server = new Server();
-
+# server
 socket(SOCK, PF_INET, SOCK_STREAM, $server->getProtocol()) or die sprintf("could not open the socket %d", $server->getProtocol());
 # PF_INET connect to internet domain
 # SOCK_STREAM tcp SOCK_DGRAM udp
@@ -15,12 +17,8 @@ bind(SOCK, sockaddr_in($server->getPort(), INADDR_ANY)) or die "could not bind s
 # bind socket to port, allowing any IP to connect
 listen(SOCK, SOMAXCONN) or die "could not listen on port";
 # start listening on port
-$array = new Array();
-# array
 while(accept(CLIENT, SOCK)) {
-  print CLIENT "HTTP/1.1 200 OK\r\n" .
-               "Content-Type: text/html; charset=UTF-8\r\n\r\n" .
-               "<html><head><title>Goodbye, world!</title></head><body>Goodbye, world!</body></html>\r\n";
   $array->push(CLIENT);
+  $server->doHandshake(CLIENT, SOCK);
   close CLIENT;
 }
