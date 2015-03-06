@@ -6,7 +6,10 @@ sub new {
   my $class = shift;
   my $self = {
     _port => 8080,
-    _protocol => getprotobyname("tcp")
+    _protocol => getprotobyname("tcp"),
+    _httpReqKey => "Sec-WebSocket-Key: ",
+    _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11",
+    _httpReqEnd => "\r\n\r\n"
   };
   bless $self, $class;
   return $self;
