@@ -10,7 +10,7 @@ sub new {
     _responseHeader => "HTTP/1.1 101 Switching Protocols".
     "Upgrade: websocket".
     "Connection: Upgrade".
-    "Sock-WebSocket-Accept: %s\r\n\r\n",
+    "Sock-WebSocket-Accept: 1\r\n\r\n",
     _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
   };
   bless $self, $class;
@@ -30,7 +30,7 @@ sub getProtocol {
 sub doHandshake {
   my ($self, $client, $socket) = @_;
   my $msg;
-  recv($socket, $msg, 2048, 0);
+  recv($client, $msg, 2048, 0);
   print STDERR $client;
   print STDERR $socket;
   print STDERR $msg;
