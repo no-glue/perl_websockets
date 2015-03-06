@@ -11,8 +11,7 @@ sub new {
     "Upgrade: websocket".
     "Connection: Upgrade".
     "Sock-WebSocket-Accept: %s\r\n\r\n",
-    _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11",
-    _httpReqEnd => "\r\n\r\n"
+    _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
   };
   bless $self, $class;
   return $self;
@@ -35,6 +34,7 @@ sub doHandshake {
   print STDERR $client;
   print STDERR $socket;
   print STDERR $msg;
+  print $client $self->{_responseHeader};
 }
 
 1;
