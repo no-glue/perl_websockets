@@ -24,5 +24,12 @@ sub pop {
   pop(@{$self->{_items}});
 }
 
+sub iterate {
+  my ($self, $fn) = @_;
+  foreach(@{$self->{_items}}) {
+    $fn->($_);
+  }
+}
+
 1;
 __END__
