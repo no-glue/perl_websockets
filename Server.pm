@@ -7,7 +7,10 @@ sub new {
   my $self = {
     _port => 8080,
     _protocol => getprotobyname("tcp"),
-    _httpReqKey => "Sec-WebSocket-Key: ",
+    _responseHeader => "HTTP/1.1 101 Switching Protocols".
+    "Upgrade: websocket".
+    "Connection: Upgrade".
+    "Sock-WebSocket-Accept: %s\r\n\r\n",
     _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11",
     _httpReqEnd => "\r\n\r\n"
   };
