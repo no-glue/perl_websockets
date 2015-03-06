@@ -31,9 +31,9 @@ sub doHandshake {
   my ($self, $client, $socket) = @_;
   my $msg;
   recv($client, $msg, 2048, 0);
-  print STDERR $client;
-  print STDERR $socket;
-  print STDERR $msg;
+  my $key = ($msg =~ m/Sec-WebSocket-Key:\s+(.*?)[\n\r]+/);
+  print STDERR $msg."\n";
+  print STDERR $key."\n";
   print $client $self->{_responseHeader};
 }
 
