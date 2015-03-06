@@ -30,9 +30,11 @@ sub getProtocol {
 
 sub doHandshake {
   my ($self, $client, $socket) = @_;
-  while(my $line = <$socket>) {
-    print $line;
-  }
+  my $msg;
+  recv($socket, $msg, 2048, 0);
+  print STDERR $client;
+  print STDERR $socket;
+  print STDERR $msg;
 }
 
 1;
