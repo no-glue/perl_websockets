@@ -40,10 +40,6 @@ sub doHandshake {
   my $keyEncoded = sha1_base64($key.$self->{_guidString});
   print $client sprintf($self->{_responseHeader}, $keyEncoded);
   # sent response header
-  my $serverSays = "hello\r\n";
-  print $client $serverSays;
-  recv($client, $msg, 2048, 0);
-  print STDERR $msg;
 }
 
 sub listen {
