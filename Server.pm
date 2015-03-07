@@ -9,10 +9,10 @@ sub new {
   my $self = {
     _port => 8080,
     _protocol => getprotobyname("tcp"),
-    _responseHeader => "HTTP/1.1 101 Switching Protocols".
-    "Upgrade: websocket".
-    "Connection: Upgrade".
-    "Sock-WebSocket-Accept: 1\r\n\r\n",
+    _responseHeader => "HTTP/1.1 101 Switching Protocols\r\n".
+    "Upgrade: websocket\r\n".
+    "Connection: Upgrade\r\n".
+    "Sock-WebSocket-Accept: %s\r\n\r\n",
     _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
   };
   bless $self, $class;
@@ -36,7 +36,16 @@ sub doHandshake {
   my @matches = $msg =~ /Sec-WebSocket-Key:\s+(.*?)[\n\r]+/;
   my $key = trim(shift @matches);
   my $keyEncoded = sha1_base64($key.$self->{_guidString});
+  print STDERR sprintf($self->{_responseHeader}, $keyEncoded);
   print $client sprintf($self->{_responseHeader}, $keyEncoded);
+}
+
+sub listen {
+  my ($self, $client) = @_;
+  my $msg;
+  recv($client, $msg, 2048, 0);
+  print STDERR $msg;
+  print $client $msg;
 }
 
 1;
