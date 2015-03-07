@@ -1,6 +1,8 @@
 package Server;
 use strict;
 use Socket;
+use Text::Trim;
+use Digest::SHA1 qw(sha1_base64);
 
 sub new {
   my $class = shift;
@@ -28,13 +30,13 @@ sub getProtocol {
 }
 
 sub doHandshake {
-  my ($self, $client, $socket) = @_;
+  my ($self, $client) = @_;
   my $msg;
   recv($client, $msg, 2048, 0);
-  my $key = ($msg =~ m/Sec-WebSocket-Key:\s+(.*?)[\n\r]+/);
-  print STDERR $msg."\n";
-  print STDERR $key."\n";
-  print $client $self->{_responseHeader};
+  my @matches = $msg =~ /Sec-WebSocket-Key:\s+(.*?)[\n\r]+/;
+  my $key = trim(shift @matches);
+  my $keyEncoded = sha1_base64($key.$self->{_guidString});
+  print $client sprintf($self->{_responseHeader}, $keyEncoded);
 }
 
 1;

@@ -24,6 +24,6 @@ listen($sock, SOMAXCONN) or die "could not listen on port";
 # start listening on port
 while(accept($client, $sock)) {
   $array->push($client);
-  $server->doHandshake($client, $sock);
-  close $client;
+  $server->doHandshake($client);
 }
+close $client;
