@@ -3,6 +3,8 @@ use strict;
 use Socket;
 use Text::Trim;
 use Digest::SHA1 qw(sha1_base64);
+use MIME::Base64;
+use utf8;
 
 sub new {
   my $class = shift;
@@ -36,8 +38,15 @@ sub doHandshake {
   my @matches = $msg =~ /Sec-WebSocket-Key:\s+(.*?)[\n\r]+/;
   my $key = trim(shift @matches);
   my $keyEncoded = sha1_base64($key.$self->{_guidString});
-  print STDERR sprintf($self->{_responseHeader}, $keyEncoded);
   print $client sprintf($self->{_responseHeader}, $keyEncoded);
+  my $serverSays = "hello\r\n";
+  my $serverSaysEncoded = encode_base64(utf8::encode($serverSays));
+  my $serverSaysEncodedLength = length($serverSaysEncoded);
+  my $sayToClient = "";
+  $sayToClient.=chr(0x81);
+  $sayToClient.=chr($serverSaysEncodedLength);
+  $sayToClient.=$serverSaysEncoded;
+  print $client $sayToClient;
 }
 
 sub listen {
