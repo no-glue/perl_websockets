@@ -39,14 +39,18 @@ sub doHandshake {
   my $key = trim(shift @matches);
   my $keyEncoded = sha1_base64($key.$self->{_guidString});
   print $client sprintf($self->{_responseHeader}, $keyEncoded);
+  print STDERR "sent response header";
   my $serverSays = "hello\r\n";
   my $serverSaysEncoded = encode_base64(utf8::encode($serverSays));
   my $serverSaysEncodedLength = length($serverSaysEncoded);
   my $sayToClient = "";
-  $sayToClient.=chr(0x81);
-  $sayToClient.=chr($serverSaysEncodedLength);
-  $sayToClient.=$serverSaysEncoded;
+  $sayToClient = $sayToClient.chr(0x81);
+  $sayToClient = $sayToClient.chr($serverSaysEncodedLength);
+  $sayToClient = $sayToClient.$serverSaysEncoded;
+  print STDERR $sayToClient." and something";
   print $client $sayToClient;
+  recv($client, $msg, 2048, 0);
+  print STDERR $msg;
 }
 
 sub listen {
