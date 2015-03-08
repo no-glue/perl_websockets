@@ -11,10 +11,10 @@ sub new {
   my $self = {
     _port => 8080,
     _protocol => getprotobyname("tcp"),
-    _responseHeader => "HTTP/1.1 101 Switching Protocols\r\n".
-    "Upgrade: websocket\r\n".
+    _responseHeader => "HTTP/1.1 101 Web Socket Protocol Handshake\r\n".
+    "Upgrade: WebSocket\r\n".
     "Connection: Upgrade\r\n".
-    "Sock-WebSocket-Accept: %s\r\n\r\n",
+    "sec-websocket-accept: %s\r\n\r\n",
     _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
   };
   bless $self, $class;
