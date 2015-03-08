@@ -1,6 +1,5 @@
 package Server;
 use strict;
-use Socket;
 use Text::Trim;
 use Digest::SHA1 qw(sha1_base64);
 use MIME::Base64;
@@ -33,8 +32,7 @@ sub getProtocol {
 
 sub doHandshake {
   my ($self, $client) = @_;
-  my $msg;
-  recv($client, $msg, 2048, 0);
+  my $msg = <$client>;
   my @matches = $msg =~ /Sec-WebSocket-Key:\s+(.*?)[\n\r]+/;
   my $key = trim(shift @matches);
   my $keyEncoded = sha1_base64($key.$self->{_guidString});
