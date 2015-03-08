@@ -1,0 +1,14 @@
+<html>
+  <head></head>
+  <body>
+    <script type="text/javascript">
+      var connection = new WebSocket("ws://127.0.0.1:8080");
+      connection.onopen = function(e) {
+        console.debug("onopen", e);
+      };
+      connection.onmessage = function(e) {
+        console.debug("onmessage", e);
+      };
+    </script>
+  </body>
+</html>
