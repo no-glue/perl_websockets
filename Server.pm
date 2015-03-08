@@ -14,7 +14,8 @@ sub new {
     "Upgrade: WebSocket\r\n".
     "Connection: Upgrade\r\n".
     "sec-websocket-accept: %s\r\n\r\n",
-    _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+    _guidString => "258EAFA5-E914-47DA-95CA-C5AB0DC85B11",
+    _handshakeComplete => 0
   };
   bless $self, $class;
   return $self;
@@ -32,11 +33,16 @@ sub getProtocol {
 
 sub doHandshake {
   my ($self, $client) = @_;
-  my $msg = <$client>;
+  my $msg;
+  recv($client, $msg, 2048, 0);
+  print STDERR "Handshake - received from client: ".$msg."\n";
   my @matches = $msg =~ /Sec-WebSocket-Key:\s+(.*?)[\n\r]+/;
   my $key = trim(shift @matches);
+  print STDERR "Handshake - received key from client: ".$key."\n";
   my $keyEncoded = sha1_base64($key.$self->{_guidString});
+  print STDERR "Handshake - sending to client: ".sprintf($self->{_responseHeader}, $keyEncoded)."\n";
   print $client sprintf($self->{_responseHeader}, $keyEncoded);
+  $self->{_handshakeComplete} = 1;
   # sent response header
 }
 

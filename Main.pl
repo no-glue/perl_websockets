@@ -17,5 +17,7 @@ $socket = new IO::Socket::INET (
 print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
-  $server->doHandshake($clientSocket);
+  if(!$server->{_handshakeComplete}) {
+    $server->doHandshake($clientSocket);
+  }
 }
