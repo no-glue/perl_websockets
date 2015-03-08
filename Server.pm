@@ -38,15 +38,14 @@ sub doHandshake {
   }
   my $msg;
   recv($client, $msg, 2048, 0);
-  print STDERR "Handshake - received from client: ".$msg."\n";
+  # print STDERR "Handshake - received from client: ".$msg."\n";
   my @matches = $msg =~ /Sec-WebSocket-Key:\s+(.*?)[\n\r]+/;
   my $key = trim(shift @matches);
-  print STDERR "Handshake - received key from client: ".$key."\n";
+  # print STDERR "Handshake - received key from client: ".$key."\n";
   my $keyEncoded = sha1_base64($key.$self->{_guidString})."=";
-  print STDERR "Handshake - sending to client: ".sprintf($self->{_responseHeader}, $keyEncoded)."\n";
+  # print STDERR "Handshake - sending to client: ".sprintf($self->{_responseHeader}, $keyEncoded)."\n";
   print $client sprintf($self->{_responseHeader}, $keyEncoded);
   $self->{_handshakeComplete} = 1;
-  # sent response header
 }
 
 sub listen {
