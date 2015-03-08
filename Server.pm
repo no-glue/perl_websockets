@@ -33,6 +33,9 @@ sub getProtocol {
 
 sub doHandshake {
   my ($self, $client) = @_;
+  if($self->{_handshakeComplete} == 1) {
+    return;
+  }
   my $msg;
   recv($client, $msg, 2048, 0);
   print STDERR "Handshake - received from client: ".$msg."\n";
