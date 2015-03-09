@@ -1,12 +1,14 @@
 #!/usr/bin/env perl
 use IO::Socket::INET;
-use Server;
+use threads("yield", 
+"stack_size" => 64 * 4096, 
+"exit" => "threads_only", 
+"stringify");
+use StartThread;
 use Array;
 
 $array = new Array();
 # array
-$server = new Server();
-# server
 $socket = new IO::Socket::INET (
   LocalHost => '127.0.0.1',
   LocalPort => '8080',
@@ -17,8 +19,5 @@ $socket = new IO::Socket::INET (
 print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
-  $server->doHandshake($clientSocket);
-  while(1) {
-    $server->listen($clientSocket);
-  }
+  $thread = threads->create("StartThread::startThread", $clientSocket);
 }
