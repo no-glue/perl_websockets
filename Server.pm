@@ -55,8 +55,9 @@ sub listen {
   my $msg;
   recv($client, $msg, $BYTES_TO_READ, 0);
   # print STDERR "Listen - client says: ".$msg."\n";
-  $msg = $self->unmask($msg);
-  print STDERR "Listen - unmasked message ".$msg."\n";
+  # $msg = $self->unmask($msg);
+  # no need to unmask for echo
+  # print STDERR "Listen - unmasked message ".$msg."\n";
   print $client $msg;
 }
 
