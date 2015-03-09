@@ -10,6 +10,8 @@ use StartThreadServer;
 @array = ();
 share(@array);
 # array
+@clients = ();
+# clients
 $socket = new IO::Socket::INET (
   LocalHost => '127.0.0.1',
   LocalPort => '8080',
@@ -20,6 +22,7 @@ $socket = new IO::Socket::INET (
 print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
+  push @clients, $clientSocket;
   $thread = threads->create("StartThreadServer::startThread", $clientSocket, @array);
   $thread->detach();
 }
