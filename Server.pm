@@ -86,5 +86,21 @@ sub unmask {
   return $msgPlain;
 }
 
+sub mask {
+  my ($self, $msg) = @_;
+  my $b1 = 0x80 | (0x1 & 0x0f);
+  # first byte of header
+  my $length = length($msg);
+  my $header = "";
+  if($length <= 125) {
+    $header = pack("CC", $b1, $length);
+  } elsif($length > 125 && $length < 65536) {
+    $header = pack("CCn", $b1, 126, $length);
+  } elsif($length >= 65536) {
+    $header = pack("CCNN", $b1, 127, $length);
+  }
+  return $header.$msg;
+}
+
 1;
 __END__
