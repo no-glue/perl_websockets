@@ -5,7 +5,7 @@ use threads("yield",
 "exit" => "threads_only", 
 "stringify");
 use threads::shared;
-use StartThread;
+use StartThreadServer;
 
 @array = ();
 share(@array);
@@ -20,6 +20,6 @@ $socket = new IO::Socket::INET (
 print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
-  $thread = threads->create("StartThread::startThread", $clientSocket, @array);
+  $thread = threads->create("StartThreadServer::startThread", $clientSocket, @array);
   $thread->detach();
 }
