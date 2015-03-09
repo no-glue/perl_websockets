@@ -58,6 +58,7 @@ sub listen {
   # print STDERR "Listen - number of bytes received ".(length $msg)."\n";
   # print STDERR "Listen - client says: ".$msg."\n";
   $msg = $self->unmask($msg, $msgLen);
+  # print STDERR "Listen - unmasked message ".$msg."\n";
   print $client $msg;
 }
 
