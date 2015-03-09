@@ -2,11 +2,11 @@ package StartThread;
 use Server;
 
 sub startThread {
-  my ($client) = @_;
+  my ($client, @array) = @_;
   my $server = new Server();
   $server->doHandshake($client);
   while(1) {
-    $server->listen($client);
+    $server->listen($client, @array);
   }
 }
 
