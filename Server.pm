@@ -47,7 +47,6 @@ sub listen {
   # no need to unmask for echo
   # print STDERR "Listen - unmasked message ".$msg."\n";
   push @array, $msg;
-  print $client $msg;
 }
 
 sub unmask {

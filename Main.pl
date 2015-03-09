@@ -6,12 +6,16 @@ use threads("yield",
 "stringify");
 use threads::shared;
 use StartThreadServer;
+use StartThreadBroadcast;
 
 @array = ();
 share(@array);
 # array
 @clients = ();
 # clients
+$thread = threads->create("StartThreadBroadcast::startThreadBroadcast", @clients, @array);
+$thread->detach();
+# broadcastConsumer
 $socket = new IO::Socket::INET (
   LocalHost => '127.0.0.1',
   LocalPort => '8080',
