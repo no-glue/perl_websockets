@@ -20,4 +20,5 @@ print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
   $thread = threads->create("StartThread::startThread", $clientSocket);
+  $thread->detach();
 }
