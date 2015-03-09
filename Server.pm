@@ -5,6 +5,8 @@ use Digest::SHA1 qw(sha1_base64);
 use MIME::Base64;
 use utf8;
 
+my $BYTES_TO_READ = 2048;
+
 sub new {
   my $class = shift;
   my $self = {
@@ -37,7 +39,7 @@ sub doHandshake {
     return;
   }
   my $msg;
-  recv($client, $msg, 2048, 0);
+  recv($client, $msg, $BYTES_TO_READ, 0);
   # print STDERR "Handshake - received from client: ".$msg."\n";
   my @matches = $msg =~ /Sec-WebSocket-Key:\s+(.*?)[\n\r]+/;
   my $key = trim(shift @matches);
@@ -51,7 +53,7 @@ sub doHandshake {
 sub listen {
   my ($self, $client) = @_;
   my $msg;
-  recv($client, $msg, 2048, 0);
+  recv($client, $msg, $BYTES_TO_READ, 0);
   # print STDERR "Listen - client says: ".$msg."\n";
   print $client $msg;
 }
