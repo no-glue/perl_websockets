@@ -10,8 +10,6 @@ my $BYTES_TO_READ = 2048;
 sub new {
   my $class = shift;
   my $self = {
-    _port => 8080,
-    _protocol => getprotobyname("tcp"),
     _responseHeader => "HTTP/1.1 101 Web Socket Protocol Handshake\r\n".
     "Upgrade: WebSocket\r\n".
     "Connection: Upgrade\r\n".
@@ -21,16 +19,6 @@ sub new {
   };
   bless $self, $class;
   return $self;
-}
-
-sub getPort {
-  my ($self) = @_;
-  return $self->{_port};
-}
-
-sub getProtocol {
-  my ($self) = @_;
-  return $self->{_protocol};
 }
 
 sub doHandshake {
