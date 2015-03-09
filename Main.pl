@@ -18,4 +18,7 @@ print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
   $server->doHandshake($clientSocket);
+  while(1) {
+    $server->listen($clientSocket);
+  }
 }

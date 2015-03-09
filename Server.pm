@@ -52,7 +52,7 @@ sub listen {
   my ($self, $client) = @_;
   my $msg;
   recv($client, $msg, 2048, 0);
-  print STDERR $msg;
+  # print STDERR "Listen - client says: ".$msg."\n";
   print $client $msg;
 }
 
