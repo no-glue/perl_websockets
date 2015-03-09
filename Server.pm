@@ -54,8 +54,16 @@ sub listen {
   my ($self, $client) = @_;
   my $msg;
   recv($client, $msg, $BYTES_TO_READ, 0);
+  my $msgLen = length $msg;
+  # print STDERR "Listen - number of bytes received ".(length $msg)."\n";
   # print STDERR "Listen - client says: ".$msg."\n";
+  $msg = $self->unmask($msg, $msgLen);
   print $client $msg;
+}
+
+sub unmask {
+  my ($self, $msg, $msgLen) = @_;
+  return $msg;
 }
 
 1;
