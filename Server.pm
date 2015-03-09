@@ -54,17 +54,36 @@ sub listen {
   my ($self, $client) = @_;
   my $msg;
   recv($client, $msg, $BYTES_TO_READ, 0);
-  my $msgLen = length $msg;
-  # print STDERR "Listen - number of bytes received ".(length $msg)."\n";
   # print STDERR "Listen - client says: ".$msg."\n";
-  $msg = $self->unmask($msg, $msgLen);
-  # print STDERR "Listen - unmasked message ".$msg."\n";
+  $msg = $self->unmask($msg);
+  print STDERR "Listen - unmasked message ".$msg."\n";
   print $client $msg;
 }
 
 sub unmask {
-  my ($self, $msg, $msgLen) = @_;
-  return $msg;
+  my ($self, $msg) = @_;
+  my $length = ord(substr($msg, 1, 1)) & 0x7f;
+  # length - low 7 bits at position 1, mask 127, hex 0x7f
+  # print STDERR "Unmask - message length ".$length."\n";
+  my $mask = "";
+  my $data = "";
+  my $msgPlain = "";
+  if($length == 126) {
+    $mask = substr($msg, 4 , 4);
+    $data = substr($msg, 8);
+  } elsif($length == 127) {
+    $mask = substr($msg, 10, 4);
+    $data = substr($msg, 14);
+  } else {
+    $mask = substr($msg, 2, 4);
+    $data = substr($msg, 6);
+  }
+
+  for(my $i = 0; $i < length($data); $i++) {
+    $msgPlain .= substr($data, $i, 1) ^ substr($mask, $i % 4, 1);
+  }
+
+  return $msgPlain;
 }
 
 1;
