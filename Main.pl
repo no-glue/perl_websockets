@@ -10,11 +10,11 @@ use BroadcastConsumer;
 
 my $q = Thread::Queue->new();
 # q
-my $clients = Thread::Queue->new();
+my @clients;
 # clients
 my $broadcastThread;
 # broadcastThread;
-$socket = new IO::Socket::INET (
+my $socket = new IO::Socket::INET (
   LocalHost => '127.0.0.1',
   LocalPort => '8080',
   Proto => 'tcp',
@@ -39,6 +39,7 @@ while(1) {
   $broadcastThread = threads->create(sub {
     $SIG{"TERM"} = sub {threads->exit();};
     $broadcastConsumer = new BroadcastConsumer();
+    print STDERR "Broadcasting, number of clients ".@clients."\n";
     while(1) {
       $broadcastConsumer->broadcast(\@clients, $q);
     }

@@ -12,9 +12,9 @@ sub new {
 sub broadcast {
   my ($self, $clients, $q) = @_;
   my $msg = $q->dequeue();
-  for(my $i = 0; i < @$clients; $i++) {
-    my $client = @$clients[$i];
-    print $client $msg;
+  # print STDERR "msg ".$msg."\n";
+  foreach(@$clients) {
+    print $_ $msg;
   }
 }
 
