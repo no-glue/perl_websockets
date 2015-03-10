@@ -4,19 +4,18 @@ use threads("yield",
 "stack_size" => 64 * 4096, 
 "exit" => "threads_only", 
 "stringify");
-use threads::shared;
+use Thread::Queue;
 use Server;
 use BroadcastConsumer;
 
-@array = ();
-share(@array);
-# array
+my $q = Thread::Queue->new();
+# q
 @clients = ();
 # clients
 $thread = threads->create(sub {
   $broadcastConsumer = new BroadcastConsumer();
   while(1) {
-    $broadcastConsumer->broadcast(@clients, @array);
+    $broadcastConsumer->broadcast("foo", $q);
   }
 });
 $thread->detach();
@@ -36,7 +35,7 @@ while(1) {
     $server = new Server();
     $server->doHandshake($clientSocket);
     while(1) {
-      $server->listen($clientSocket, @array);
+      $server->listen($clientSocket, $q);
     }
   });
   $thread->detach();

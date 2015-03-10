@@ -4,8 +4,6 @@ use Text::Trim;
 use Digest::SHA1 qw(sha1_base64);
 use MIME::Base64;
 use utf8;
-use threads;
-use threads::shared;
 
 my $BYTES_TO_READ = 2048;
 
@@ -41,17 +39,14 @@ sub doHandshake {
 }
 
 sub listen {
-  my ($self, $client, @array) = @_;
-  share(@array);
-  lock(@array);
+  my ($self, $client, $q) = @_;
   my $msg;
   recv($client, $msg, $BYTES_TO_READ, 0);
   # print STDERR "Listen - client says: ".$msg."\n";
   # $msg = $self->unmask($msg);
   # no need to unmask for echo
   # print STDERR "Listen - unmasked message ".$msg."\n";
-  push @array, $msg;
-  cond_broadcast(@array);
+  $q->enqueue($msg);
 }
 
 sub unmask {

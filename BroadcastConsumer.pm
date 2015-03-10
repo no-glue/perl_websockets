@@ -1,6 +1,4 @@
 package BroadcastConsumer;
-use threads;
-use threads::shared;
 
 sub new {
   my ($class) = @_;
@@ -10,18 +8,13 @@ sub new {
 }
 
 sub broadcast {
-  my ($self, @clients, @array) = @_;
-  share(@array);
-  lock(@array);
-  cond_wait(@array) until @array != 0;
-  print STDERR @array."\n";
-  my $msg = $array[0];
-  pop @array;
+  my ($self, $clients, $q) = @_;
+  print STDERR $self."\n".$clients."\n".$q."\n";
+  my $msg = $q->dequeue();
   for(my $i = 0; i < length(@clients); $i++) {
     my $client = $clients[$i];
     print $client $msg;
   }
-  cond_broadcast(@array);
 }
 
 1;
