@@ -36,7 +36,7 @@ sub at {
 sub len {
   my ($self) = @_;
   lock(@$self);
-  return length(@$self);
+  return @$self;
 }
 
 1;
