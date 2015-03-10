@@ -11,8 +11,11 @@ sub new {
 
 sub broadcast {
   my ($self, @clients, @array) = @_;
-  cond_wait(@array);
+  share(@array);
   lock(@array);
+  if(@array == 0) {
+    return;
+  }
   my $msg = $array[0];
   pop @array;
   for(my $i = 0; i < length(@clients); $i++) {

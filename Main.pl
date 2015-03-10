@@ -5,15 +5,20 @@ use threads("yield",
 "exit" => "threads_only", 
 "stringify");
 use threads::shared;
-use StartThreadServer;
-use StartThreadBroadcast;
+use Server;
+use BroadcastConsumer;
 
 @array = ();
 share(@array);
 # array
 @clients = ();
 # clients
-$thread = threads->create("StartThreadBroadcast::startThreadBroadcast", @clients, @array);
+$thread = threads->create(sub {
+  $broadcastConsumer = new BroadcastConsumer();
+  while(1) {
+    $broadcastConsumer->broadcast(@clients, @array);
+  }
+});
 $thread->detach();
 # broadcastConsumer
 $socket = new IO::Socket::INET (
@@ -27,6 +32,12 @@ print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
   push @clients, $clientSocket;
-  $thread = threads->create("StartThreadServer::startThread", $clientSocket, @array);
+  $thread = threads->create(sub {
+    $server = new Server();
+    $server->doHandshake($clientSocket);
+    while(1) {
+      $server->listen($clientSocket, @array);
+    }
+  });
   $thread->detach();
 }
