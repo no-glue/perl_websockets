@@ -14,7 +14,8 @@ sub broadcast {
   my $msg = $q->dequeue();
   print STDERR "msg: ".$msg."\n".@$clients."\n";
   for(my $i = 0; i < @$clients; $i++) {
-    print $client @$clients[$i];
+    my $client = @$clients[$i];
+    print $client $msg;
   }
 }
 

@@ -13,14 +13,8 @@ my $q = Thread::Queue->new();
 # q
 @clients;
 # clients
-$thread = threads->create(sub {
-  $broadcastConsumer = new BroadcastConsumer();
-  while(1) {
-    $broadcastConsumer->broadcast(\@clients, $q);
-  }
-});
-$thread->detach();
-# broadcastConsumer
+my $broadcastThread;
+# broadcastThread;
 $socket = new IO::Socket::INET (
   LocalHost => '127.0.0.1',
   LocalPort => '8080',
@@ -32,6 +26,9 @@ print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
   push @clients, $clientSocket;
+  if(defined $broadcastThread) {
+    $broadcastThread->kill("SIGTERM");
+  }
   $thread = threads->create(sub {
     $server = new Server();
     $server->doHandshake($clientSocket);
@@ -40,4 +37,12 @@ while(1) {
     }
   });
   $thread->detach();
+  $broadcastThread = threads->create(sub {
+    $SIG{"TERM"} = sub {threads->exit();};
+    $broadcastConsumer = new BroadcastConsumer();
+    while(1) {
+      $broadcastConsumer->broadcast(\@clients, $q);
+    }
+  });
+  $broadcastThread->detach();
 }
