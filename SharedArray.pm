@@ -11,24 +11,31 @@ sub new {
 
 sub enqueue {
   my ($self, $item) = @_;
+  lock(@$self);
   push @$self, $item;
+  cond_signal(@$self);
 }
 
 sub dequeue {
   my ($self) = @_;
-  my $item = $@$self[0];
+  lock(@$self);
+  cond_wait(@$self) until @$self > 0;
+  my $item = @$self[0];
   shift @$self;
   return $item;
 }
 
 sub at {
   my ($self, $position) = @_;
+  lock(@$self);
+  cond_wait(@$self) until @$self > 0;
   $item = @$self[$position];
   return $item;
 }
 
 sub len {
   my ($self) = @_;
+  lock(@$self);
   return length(@$self);
 }
 

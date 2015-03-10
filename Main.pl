@@ -5,6 +5,7 @@ use threads("yield",
 "exit" => "threads_only", 
 "stringify");
 use Thread::Queue;
+use SharedArray;
 use Server;
 use BroadcastConsumer;
 
