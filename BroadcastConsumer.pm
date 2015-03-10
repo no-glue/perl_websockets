@@ -8,12 +8,10 @@ sub new {
 }
 
 sub broadcast {
-  my ($self, @clients, $q) = @_;
-  print STDERR $self."\n".$clients."\n".$q."\n";
+  my ($self, $clients, $q) = @_;
   my $msg = $q->dequeue();
-  for(my $i = 0; i < length(@clients); $i++) {
-    my $client = $clients[$i];
-    print $client $msg;
+  for(my $i = 0; i < $clients->len(); $i++) {
+    print $client $clients->at($i);
   }
 }
 

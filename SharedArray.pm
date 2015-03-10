@@ -28,7 +28,6 @@ sub dequeue {
 sub at {
   my ($self, $position) = @_;
   lock(@$self);
-  cond_wait(@$self) until @$self > 0;
   $item = @$self[$position];
   return $item;
 }
@@ -36,6 +35,7 @@ sub at {
 sub len {
   my ($self) = @_;
   lock(@$self);
+  cond_wait(@$self) until @$self > 0;
   return @$self;
 }
 
