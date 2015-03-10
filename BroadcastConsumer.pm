@@ -2,7 +2,9 @@ package BroadcastConsumer;
 
 sub new {
   my ($class) = @_;
-  my $self = {};
+  my $self = {
+    _clients => [@_]
+  };
   bless $self, $class;
   return $self;
 }
@@ -10,8 +12,9 @@ sub new {
 sub broadcast {
   my ($self, $clients, $q) = @_;
   my $msg = $q->dequeue();
-  for(my $i = 0; i < $clients->len(); $i++) {
-    print $client $clients->at($i);
+  print STDERR "msg: ".$msg."\n".@$clients."\n";
+  for(my $i = 0; i < @$clients; $i++) {
+    print $client @$clients[$i];
   }
 }
 

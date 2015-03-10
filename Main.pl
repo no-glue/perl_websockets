@@ -11,12 +11,12 @@ use BroadcastConsumer;
 
 my $q = Thread::Queue->new();
 # q
-$clients = new SharedArray();
+@clients;
 # clients
 $thread = threads->create(sub {
   $broadcastConsumer = new BroadcastConsumer();
   while(1) {
-    $broadcastConsumer->broadcast($clients, $q);
+    $broadcastConsumer->broadcast(\@clients, $q);
   }
 });
 $thread->detach();
@@ -31,7 +31,7 @@ $socket = new IO::Socket::INET (
 print STDERR "Server is up and running\n";
 while(1) {
   $clientSocket = $socket->accept();
-  $clients->enqueue($clientSocket);
+  push @clients, $clientSocket;
   $thread = threads->create(sub {
     $server = new Server();
     $server->doHandshake($clientSocket);
