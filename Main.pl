@@ -10,12 +10,12 @@ use BroadcastConsumer;
 
 my $q = Thread::Queue->new();
 # q
-@clients = ();
+@clients;
 # clients
 $thread = threads->create(sub {
   $broadcastConsumer = new BroadcastConsumer();
   while(1) {
-    $broadcastConsumer->broadcast("foo", $q);
+    $broadcastConsumer->broadcast(\@clients, $q);
   }
 });
 $thread->detach();

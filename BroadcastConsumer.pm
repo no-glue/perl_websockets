@@ -8,7 +8,7 @@ sub new {
 }
 
 sub broadcast {
-  my ($self, $clients, $q) = @_;
+  my ($self, @clients, $q) = @_;
   print STDERR $self."\n".$clients."\n".$q."\n";
   my $msg = $q->dequeue();
   for(my $i = 0; i < length(@clients); $i++) {
